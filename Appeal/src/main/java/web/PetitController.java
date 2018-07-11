@@ -762,7 +762,7 @@ public class PetitController {
 	
 	@RequestMapping(value = "/downloadreestr1117_1", method = RequestMethod.GET)
     public void reestr1(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        downloadFile(request, response, "\\resources\\doc_fond\\all_01.02.2017.xlsx");
+        downloadFile(request, response, "\\resources\\doc_fond\\reestr_sp.xls");
 	}
 	
 	@RequestMapping(value = "/downloadmanual", method = RequestMethod.GET)
@@ -1161,5 +1161,27 @@ public class PetitController {
       }
       
       return new ResponseEntity<>("Файл успешно загружен в базу.",HttpStatus.OK);
+   }
+   
+   @PostMapping("/fileUpload_gr_sp")
+   public ResponseEntity<Object> fileUpload_gr_sp(@RequestParam(value = "_csrf", required = false) String csrf, @RequestParam("file") MultipartFile file)
+         throws IOException, JAXBException {
+
+      // Save file on system
+      if (!file.getOriginalFilename().isEmpty()) {
+    	  
+    	 
+    	 File f = new File(servletcontext.getRealPath("\\resources\\doc_fond\\reestr_sp.xls"));
+         BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(f));
+         outputStream.write(file.getBytes());
+         outputStream.flush();
+         outputStream.close();
+         
+      }else{
+         return new ResponseEntity<>("Файл не загружен. Повторите попытку или обратитесь к администратору.",HttpStatus.BAD_REQUEST);
+      }
+      
+      
+      return new ResponseEntity<>(new String("Реестр успешно загружен.").getBytes("UTF-8"),HttpStatus.OK);
    }
 }
